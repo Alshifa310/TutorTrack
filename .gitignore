@@ -1,0 +1,28 @@
+# root env files
+.env
+
+# frontend workspace
+tutortrack-frontend/node_modules/
+tutortrack-frontend/.pnp
+tutortrack-frontend/.pnp.*
+tutortrack-frontend/.yarn/*
+!tutortrack-frontend/.yarn/patches
+!tutortrack-frontend/.yarn/plugins
+!tutortrack-frontend/.yarn/releases
+!tutortrack-frontend/.yarn/versions
+tutortrack-frontend/coverage/
+tutortrack-frontend/.next/
+tutortrack-frontend/out/
+tutortrack-frontend/build/
+tutortrack-frontend/.DS_Store
+tutortrack-frontend/*.pem
+tutortrack-frontend/npm-debug.log*
+tutortrack-frontend/yarn-debug.log*
+tutortrack-frontend/yarn-error.log*
+tutortrack-frontend/.pnpm-debug.log*
+tutortrack-frontend/.env*
+tutortrack-frontend/.vercel
+tutortrack-frontend/*.tsbuildinfo
+tutortrack-frontend/next-env.d.ts
+tutortrack-frontend/AGENTS.md
+tutortrack-frontend/CLAUDE.md
