@@ -1,6 +1,21 @@
 # root env files
 .env
 
+# backend workspace
+backend/node_modules/
+backend/.env
+backend/.env*
+backend/coverage/
+backend/build/
+backend/dist/
+backend/.DS_Store
+backend/*.pem
+backend/npm-debug.log*
+backend/yarn-debug.log*
+backend/yarn-error.log*
+backend/.pnpm-debug.log*
+backend/*.tsbuildinfo
+
 # frontend workspace
 tutortrack-frontend/node_modules/
 tutortrack-frontend/.pnp
@@ -26,3 +41,5 @@ tutortrack-frontend/*.tsbuildinfo
 tutortrack-frontend/next-env.d.ts
 tutortrack-frontend/AGENTS.md
 tutortrack-frontend/CLAUDE.md
+
+
