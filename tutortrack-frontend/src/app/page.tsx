@@ -36,7 +36,7 @@ export default function Home() {
             </Show>
             <Show when="signed-in">
               <div className="rounded-full border border-slate-200 bg-white px-2 py-1 shadow-sm">
-                <UserButton afterSignOutUrl="/" />
+                {/* <UserButton afterSignOutUrl="/" /> */}
               </div>
             </Show>
           </div>
