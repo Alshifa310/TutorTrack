@@ -1,26 +1,36 @@
 const express = require("express");
 const { clerkMiddleware, getAuth } = require("@clerk/express");
 const supabase = require("../config/supabaseClient");
-const { insertShiftlog } = require("../services/shiftService");
+const { updateShiftlog } = require("../services/shiftService");
 
 const router = express.Router();
 
 router.use(clerkMiddleware());
 
-router.post("/", async (req, res) => {
+router.patch("/", async (req, res) => {
   try {
     const auth = getAuth(req);
 
     if (!auth.isAuthenticated) {
-      return res.status(401).json({ error: "Unauthorized" });
+      return res.status(401).json({
+        error: "Unauthorized",
+      });
     }
 
     const clerkUserId = auth.userId;
-   
-    const { log_date, location, sign_in_time, signIn_notes } = req.body;
 
-    if (!log_date || !sign_in_time) {
-      return res.status(400).json({ error: "Missing required fields" });
+    const {
+      log_date,
+      sign_out_time,
+      appointment_count,
+      location,
+      signOut_notes,
+    } = req.body;
+
+    if (!log_date || !sign_out_time) {
+      return res.status(400).json({
+        error: "Missing required fields",
+      });
     }
 
     const { data: userRow, error: userError } = await supabase
@@ -47,21 +57,25 @@ router.post("/", async (req, res) => {
       });
     }
 
-    const inserted = await insertShiftlog({
+    const updated = await updateShiftlog({
       tutor_id: tutorRow.id,
       log_date,
-      location: location || null,
-      signIn_notes: signIn_notes || null,
-      sign_in_time,
+      sign_out_time,
+      appointment_count,
+      location,
+      signOut_notes,
     });
 
-    return res.status(201).json({
-      message: "Success",
-      data: inserted,
+    return res.status(200).json({
+      message: "Shift signed out successfully",
+      data: updated,
     });
   } catch (error) {
-    console.error("Supabase Error:", error.message);
-    return res.status(500).json({ error: error.message });
+    console.error("Sign Out Error:", error);
+
+    return res.status(500).json({
+      error: error.message,
+    });
   }
 });
 

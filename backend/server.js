@@ -1,7 +1,10 @@
 const path = require("path");
 require("dotenv").config({ path: path.resolve(process.cwd(), ".env.local") });
 const fs = require("fs");
-const shiftRoutes = require("./routes/shift");
+
+const shiftSignInRoute = require("./routes/shiftSignIn");
+const shiftSignOutRoute = require("./routes/shiftSignOut");
+
 
 const express = require("express");
 const cors = require("cors");
@@ -17,7 +20,9 @@ app.get("/", (req, res) => {
   res.send("Hello World! Your Express server is working.");
 });
 
-app.use("/api/shift/sign-in", shiftRoutes);
+
+app.use("/api/shift/sign-in", shiftSignInRoute);
+app.use("/api/shift/sign-out", shiftSignOutRoute);
 
 app.listen(PORT, () => {
   console.log(`Server is running at http://localhost:${PORT}`);
