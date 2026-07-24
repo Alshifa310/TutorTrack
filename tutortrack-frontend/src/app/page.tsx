@@ -4,12 +4,11 @@ import {
   SignInButton,
   SignUpButton,
   Show,
-  UserButton,
 } from "@clerk/nextjs";
 
 export default function Home() {
   return (
-    <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[radial-gradient(circle_at_top,_#f5f7ff_0%,_#eef2ff_28%,_#f8fafc_60%,_#ffffff_100%)] px-6 py-10 text-slate-950">
+    <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[radial-gradient(circle_at_top,#f5f7ff_0%,#eef2ff_28%,#f8fafc_60%,#ffffff_100%)] px-6 py-10 text-slate-950">
       <div className="absolute inset-0 bg-[linear-gradient(to_bottom_right,rgba(15,23,42,0.04),transparent_35%,rgba(15,23,42,0.03)_65%,transparent_100%)]" />
       <div className="relative w-full max-w-5xl rounded-[2rem] border border-white/70 bg-white/80 p-6 shadow-[0_24px_100px_rgba(15,23,42,0.12)] backdrop-blur md:p-10">
         <div className="flex items-center justify-between gap-4 border-b border-slate-200 pb-6">

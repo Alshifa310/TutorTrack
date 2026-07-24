@@ -1,37 +1,40 @@
 "use client";
 
 import {
-    NumberField,
-    NumberFieldDecrement,
-    NumberFieldGroup,
-    NumberFieldIncrement,
-    NumberFieldInput,
+  NumberField,
+  NumberFieldDecrement,
+  NumberFieldGroup,
+  NumberFieldIncrement,
+  NumberFieldInput,
 } from "@/components/reui/number-field";
 import { Button } from "@/components/ui/button";
 import {
-    Form,
-    FormControl,
-    FormDescription,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
 } from "@/components/ui/form";
 
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
-    ArrowRight,
-    CalendarDays,
-    Clock3,
-    MapPin,
-    NotebookText,
+  ArrowLeftCircle,
+  ArrowRight,
+  CalendarDays,
+  Clock3,
+  MapPin,
+  NotebookText,
 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
+import Link from "next/link";
 
 const attendanceFormSchema = z.object({
   log_date: z.string().min(1, {
@@ -75,6 +78,7 @@ function getInitialFormValues() {
 
 export function SignOutShift() {
   const { getToken } = useAuth();
+   const router = useRouter();
   const form = useForm<z.infer<typeof attendanceFormSchema>>({
     resolver: zodResolver(attendanceFormSchema),
     defaultValues: getInitialFormValues(),
@@ -90,7 +94,7 @@ export function SignOutShift() {
   }
 
   async function onSubmit(values: z.infer<typeof attendanceFormSchema>) {
-    printValue(values)
+    printValue(values);
     const submission = {
       ...values,
       log_date: getTodayDate(),
@@ -124,6 +128,9 @@ export function SignOutShift() {
         description: "Your attendance entry has been saved successfully.",
       });
       form.reset(getInitialFormValues());
+       setTimeout(() => {
+        router.push("/tutor/dashboard");
+      }, 1500);
     } catch (error) {
       toast.error(
         error instanceof Error ? error.message : "Something went wrong.",
@@ -140,17 +147,16 @@ export function SignOutShift() {
       <section className="relative mx-auto flex min-h-[calc(100vh-4rem)] w-full max-w-5xl items-center justify-center">
         <div className="w-full overflow-hidden rounded-[2rem] border border-white/10 bg-white/5 shadow-[0_30px_120px_rgba(2,6,23,0.55)] backdrop-blur-2xl">
           <div className="p-4 sm:p-6 lg:p-8">
-            <div className="mb-6 flex items-center justify-center gap-3 border-b border-white/10 pb-6 ">
-              <div className="relative space-y-6">
-                <div className="space-y-4">
-                  <h1 className="max-w-sm text-4xl font-semibold tracking-tight text-white sm:text-5xl">
-                    Shift{" "}
-                    <span className="bg-linear-to-r from-violet-300 via-blue-400 to-blue-500 bg-clip-text text-transparent">
-                      Sign Out
-                    </span>
-                  </h1>
-                </div>
-              </div>
+            <div className="mb-6 flex items-center justify-between gap-3 border-b border-white/10 pb-6 ">
+              <h1 className="max-w-sm text-4xl font-semibold tracking-tight text-white sm:text-5xl">
+                Shift{" "}
+                <span className="bg-linear-to-r from-violet-300 via-blue-400 to-blue-500 bg-clip-text text-transparent">
+                  Sign Out
+                </span>
+              </h1>
+              <Link href={"/tutor/dashboard"}>
+                <ArrowLeftCircle className="h-10 w-10" />
+              </Link>
             </div>
 
             <div className="rounded-[1.5rem] border bg-slate-950/50 border-white/10  p-4 sm:p-6">

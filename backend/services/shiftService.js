@@ -15,8 +15,7 @@ const insertShiftlog = async (shiftData) => {
 };
 
 async function updateShiftlog({
-  tutor_id,
-  log_date,
+  shift_id,
   sign_out_time,
   appointment_count,
   location,
@@ -30,9 +29,7 @@ async function updateShiftlog({
       location,
       signOut_notes,
     })
-    .eq("tutor_id", tutor_id)
-    .eq("log_date", log_date)
-    .is("sign_out_time", null)
+    .eq("id", shift_id)
     .select()
     .single();
 
@@ -42,8 +39,22 @@ async function updateShiftlog({
 
   return data;
 }
+const getActiveShift = async (tutorId) => {
+  const { data, error } = await supabase
+    .from("attendancelogs")
+    .select("*")
+    .eq("tutor_id", tutorId)
+    .is("sign_out_time", null)
+    .maybeSingle();
 
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data;
+};
 module.exports = {
   insertShiftlog,
   updateShiftlog,
+  getActiveShift,
 };

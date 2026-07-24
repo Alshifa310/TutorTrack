@@ -1,8 +1,7 @@
 const express = require("express");
 const { clerkMiddleware, getAuth } = require("@clerk/express");
 const supabase = require("../config/supabaseClient");
-const { updateShiftlog } = require("../services/shiftService");
-
+const { updateShiftlog, getActiveShift } = require("../services/shiftService");
 const router = express.Router();
 
 router.use(clerkMiddleware());
@@ -57,9 +56,16 @@ router.patch("/", async (req, res) => {
       });
     }
 
+    const activeShift = await getActiveShift(tutorRow.id);
+
+    if (!activeShift) {
+      return res.status(400).json({
+        error: "You are not currently signed in. Please sign in first.",
+      });
+    }
+
     const updated = await updateShiftlog({
-      tutor_id: tutorRow.id,
-      log_date,
+      shift_id: activeShift.id,
       sign_out_time,
       appointment_count,
       location,

@@ -4,6 +4,8 @@ const fs = require("fs");
 
 const shiftSignInRoute = require("./routes/shiftSignIn");
 const shiftSignOutRoute = require("./routes/shiftSignOut");
+const tutorProfileRoutes = require("./routes/tutorProfile");
+const tutordashboardRoutes = require("./routes/tutorDashboard");
 
 
 const express = require("express");
@@ -23,6 +25,8 @@ app.get("/", (req, res) => {
 
 app.use("/api/shift/sign-in", shiftSignInRoute);
 app.use("/api/shift/sign-out", shiftSignOutRoute);
+app.use("/api/tutor/profile", tutorProfileRoutes);
+app.use("/api/tutor/dashboard", tutordashboardRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server is running at http://localhost:${PORT}`);

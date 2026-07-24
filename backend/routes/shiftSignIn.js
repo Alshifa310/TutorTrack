@@ -1,7 +1,7 @@
 const express = require("express");
 const { clerkMiddleware, getAuth } = require("@clerk/express");
 const supabase = require("../config/supabaseClient");
-const { insertShiftlog } = require("../services/shiftService");
+const { insertShiftlog, getActiveShift } = require("../services/shiftService");
 
 const router = express.Router();
 
@@ -16,7 +16,7 @@ router.post("/", async (req, res) => {
     }
 
     const clerkUserId = auth.userId;
-   
+
     const { log_date, location, sign_in_time, signIn_notes } = req.body;
 
     if (!log_date || !sign_in_time) {
@@ -47,6 +47,12 @@ router.post("/", async (req, res) => {
       });
     }
 
+    const activeShift = await getActiveShift(tutorRow.id);
+    if (activeShift) {
+      return res.status(400).json({
+        error: "You are already signed in. Please sign out first.",
+      });
+    }
     const inserted = await insertShiftlog({
       tutor_id: tutorRow.id,
       log_date,
@@ -64,6 +70,5 @@ router.post("/", async (req, res) => {
     return res.status(500).json({ error: error.message });
   }
 });
-
 
 module.exports = router;

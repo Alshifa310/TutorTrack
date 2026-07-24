@@ -1,12 +1,39 @@
 "use client";
 
 import { Button } from "@base-ui/react";
-import { SignInButton, SignUpButton, Show, UserButton } from "@clerk/nextjs";
-import { ArrowRight } from "lucide-react";
-import { useUser } from "@clerk/nextjs";
-import Link from 'next/link';
+import { useAuth, useUser } from "@clerk/nextjs";
+import { useEffect, useState } from "react";
+import Link from "next/link";
 export default function Home() {
+  const { getToken } = useAuth();
+
+  const [isClockedIn, setIsClockedIn] = useState(false);
   const { isLoaded, isSignedIn, user } = useUser();
+
+  useEffect(() => {
+    const fetchDashboard = async () => {
+      try {
+        const token = await getToken();
+
+        const response = await fetch(
+          "http://localhost:3000/api/tutor/dashboard",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          },
+        );
+
+        const result = await response.json();
+
+        setIsClockedIn(result.isClockedIn);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchDashboard();
+  }, [getToken]);
 
   if (!isLoaded || !isSignedIn) {
     return null;
@@ -28,28 +55,31 @@ export default function Home() {
                 </span>
               </h1>
               <div className="flex items-center gap-3">
-                <img
-                  src={user.imageUrl}
-                  alt="Profile"
-                  className="w-10 h-10 rounded-full"
-                />
-                <div></div>
+                <Link href="/tutor/profile">
+                  <img
+                    src={user.imageUrl}
+                    alt="Profile"
+                    className="w-15 h-15 rounded-full"
+                  />
+                </Link>
               </div>
             </div>
 
             <div className="rounded-[1.5rem] border bg-slate-950/50 border-white/10  p-4 sm:p-6">
-            <div className="flex justify-center items-center gap-7">
-              <Button   className="h-12 w-24 rounded-2xl bg-linear-to-r from-violet-600 via-blue-400 to-blue-600 text-base font-semibold text-white shadow-[0_20px_60px_rgba(99,102,241,0.35)] transition hover:from-violet-500 hover:via-blue-600 hover:to-blue-500">
-             <Link href="/tutor/shift/sign-in">Sign In</Link>
-              </Button>
-              <Button className="h-12 w-24 rounded-2xl bg-linear-to-r from-violet-600 via-blue-400 to-blue-600 text-base font-semibold text-white shadow-[0_20px_60px_rgba(99,102,241,0.35)] transition hover:from-violet-500 hover:via-blue-600 hover:to-blue-500">
-                 <Link href="/tutor/shift/sign-out">Sign Out</Link>
-
-              </Button>
+              <div className="flex justify-center items-center gap-7">
+                <Button disabled={isClockedIn} className="h-12 w-24 rounded-2xl bg-linear-to-r from-violet-600 via-blue-400 to-blue-600 text-base font-semibold text-white shadow-[0_20px_60px_rgba(99,102,241,0.35)] transition hover:from-violet-500 hover:via-blue-600 hover:to-blue-500">
+                  <Link href="/tutor/shift/sign-in">Sign In</Link>
+                </Button>
+                <Button disabled={!isClockedIn} className="h-12 w-24 rounded-2xl bg-linear-to-r from-violet-600 via-blue-400 to-blue-600 text-base font-semibold text-white shadow-[0_20px_60px_rgba(99,102,241,0.35)] transition hover:from-violet-500 hover:via-blue-600 hover:to-blue-500">
+                  <Link href="/tutor/shift/sign-out">Sign Out</Link>
+                </Button>
               </div>
-              <div className="mt-6 flex items-center justify-center gap-2 text-sm text-slate-400">
-                <span className="h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_0_4px_rgba(52,211,153,0.12)]" />
-                Your Status : Currently Clocked In
+              <div className="mt-6 flex items-center justify-center gap-2 text-2xl text-slate-400">
+                <span className="h-5 w-5 rounded-full bg-emerald-400 shadow-[0_0_0_4px_rgba(52,211,153,0.12)]" />
+                Your Status :
+                {isClockedIn
+                  ? " Currently Clocked In"
+                  : " Currently Clocked Out"}
               </div>
             </div>
           </div>
